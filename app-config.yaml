@@ -23,15 +23,6 @@ backend:
       - host: github.com
       - host: raw.githubusercontent.com
 
-
-To securely manage sensitive information in your configuration, such as tokens and secrets, it’s essential to move them out of the codebase and into a secure environment. Below are steps to create an environment file and modify your configuration to use it.
-
-
-1. Update app-config.yaml
-Modify your app-config.yaml to reference these environment variables instead of hardcoding sensitive values:
-
-yaml
-Copy code
 integrations:
   github:
     - host: github.com
@@ -76,3 +67,4 @@ kubernetes:
 
 permission:
   enabled: true
+

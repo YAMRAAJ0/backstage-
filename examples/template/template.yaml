@@ -1,76 +1,9 @@
-apiVersion: scaffolder.backstage.io/v1beta3
-kind: Template
-metadata:
-  name: react-app-template
-  title: React App Template
-  description: Create a new React app based on a GitHub template and publish it to a new repository.
-spec:
-  owner: devopsfarm
-  type: website
-
-  parameters:
-    - title: General Information
-      required:
-        - name
-        - repoUrl
-      properties:
-        name:
-          title: Project Name
-          type: string
-          description: Unique name for the React app
-          default: my-react-app
-        repoUrl:
-          title: New Repository URL
-          type: string
-          description: URL for the new GitHub repository (e.g., `https://github.com/username/my-react-app`)
-          ui:field: RepoUrlPicker
-          ui:options:
-            allowedHosts:
-              - github.com
-
-  steps:
-    - id: fetch-template
-      name: Fetch Template
-      action: fetch:cookiecutter
-      input:
-        url: "https://github.com/devopsfarm-projects/devopsfarm.in_ui.git"
-        targetPath: .
-        values:
-          project_name: ${{ parameters.name }}
-
-    - id: publish
-      name: Publish to GitHub
-      action: publish:github
-      input:
-        allowedHosts: ['github.com']
-        repoUrl: ${{ parameters.repoUrl }}
-        description: "Repository for ${{ parameters.name }}"
-
-    - id: register
-      name: Register in Backstage
-      action: catalog:register
-      input:
-        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
-        catalogInfoPath: /catalog-info.yaml
-
-  output:
-    links:
-      - url: ${{ steps.publish.output.repositoryUrl }}
-        title: Repository
-      - url: ${{ steps.register.output.catalogUrl }}
-        title: View in Backstage
-
-
-
-
-
-
 # apiVersion: scaffolder.backstage.io/v1beta3
 # kind: Template
 # metadata:
 #   name: react-app-template
 #   title: React App Template
-#   description: Create a new React app scaffolded with this template.
+#   description: Create a new React app based on a GitHub template and publish it to a new repository.
 # spec:
 #   owner: devopsfarm
 #   type: website
@@ -84,12 +17,12 @@ spec:
 #         name:
 #           title: Project Name
 #           type: string
-#           description: Unique name for the React component
+#           description: Unique name for the React app
 #           default: my-react-app
 #         repoUrl:
-#           title: Repository Location
+#           title: New Repository URL
 #           type: string
-#           description: GitHub repository where the app will be published
+#           description: URL for the new GitHub repository (e.g., `https://github.com/username/my-react-app`)
 #           ui:field: RepoUrlPicker
 #           ui:options:
 #             allowedHosts:
@@ -100,19 +33,18 @@ spec:
 #       name: Fetch Template
 #       action: fetch:cookiecutter
 #       input:
-#         url: ./content
-#         # url: https://github.com/devopsfarm-projects/devopsfarm.in_ui.git
+#         url: "https://github.com/YAMRAAJ0/devopsfarm.in_hrms"
 #         targetPath: .
 #         values:
-#          project_name: ${{ parameters.name }}
-  
+#           project_name: ${{ parameters.name }}
+
 #     - id: publish
 #       name: Publish to GitHub
 #       action: publish:github
 #       input:
 #         allowedHosts: ['github.com']
 #         repoUrl: ${{ parameters.repoUrl }}
-#         description: Repository for ${{ parameters.name }}
+#         description: "Repository for ${{ parameters.name }}"
 
 #     - id: register
 #       name: Register in Backstage
@@ -127,4 +59,72 @@ spec:
 #         title: Repository
 #       - url: ${{ steps.register.output.catalogUrl }}
 #         title: View in Backstage
+
+
+
+
+
+
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: react-app-template
+  title: React App Template
+  description: Create a new React app scaffolded with this template.
+spec:
+  owner: devopsfarm
+  type: website
+
+  parameters:
+    - title: General Information
+      required:
+        - name
+        - repoUrl
+      properties:
+        name:
+          title: Project Name
+          type: string
+          description: Unique name for the React component
+          default: my-react-app
+        repoUrl:
+          title: Repository Location
+          type: string
+          description: GitHub repository where the app will be published
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+
+  steps:
+    - id: fetch-template
+      name: Fetch Template
+      action: fetch:cookiecutter
+      input:
+        url: ./content
+        # url: https://github.com/devopsfarm-projects/devopsfarm.in_ui.git
+        targetPath: .
+        values:
+         project_name: ${{ parameters.name }}
+  
+    - id: publish
+      name: Publish to GitHub
+      action: publish:github
+      input:
+        allowedHosts: ['github.com']
+        repoUrl: ${{ parameters.repoUrl }}
+        description: Repository for ${{ parameters.name }}
+
+    - id: register
+      name: Register in Backstage
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
+
+  output:
+    links:
+      - url: ${{ steps.publish.output.repositoryUrl }}
+        title: Repository
+      - url: ${{ steps.register.output.catalogUrl }}
+        title: View in Backstage
 
