@@ -26,16 +26,8 @@ backend:
 
 To securely manage sensitive information in your configuration, such as tokens and secrets, it’s essential to move them out of the codebase and into a secure environment. Below are steps to create an environment file and modify your configuration to use it.
 
-1. Create an .env File
-Create a new .env file in your project root to store your secrets securely. For example:
 
-env
-Copy code
-# .env file
-GITHUB_TOKEN=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
-GITHUB_CLIENT_ID=Ov23liWggwYgluQXluaz
-GITHUB_CLIENT_SECRET=9494c78ebc255d5a5213b54df5d9fbb7d882269d
-2. Update app-config.yaml
+1. Update app-config.yaml
 Modify your app-config.yaml to reference these environment variables instead of hardcoding sensitive values:
 
 yaml
