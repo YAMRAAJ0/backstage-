@@ -7,6 +7,15 @@
  */
 
 import { createBackend } from '@backstage/backend-defaults';
+require('dotenv').config();
+
+console.log(
+  "env file",
+  process.env.GITHUB_TOKEN,
+  process.env.GITHUB_CLIENT_ID,
+  process.env.GITHUB_CLIENT_SECRET
+);
+
 
 const backend = createBackend();
 
