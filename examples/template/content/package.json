@@ -1,5 +1,5 @@
 {
-  "name": "${{ values.name }}",
+  "name": "{{cookiecutter.project_name}}",
   "private": true,
   "dependencies": {}
 }

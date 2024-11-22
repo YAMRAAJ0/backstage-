@@ -1,74 +1,130 @@
 apiVersion: scaffolder.backstage.io/v1beta3
-# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-template
 kind: Template
 metadata:
-  name: example-nodejs-template
-  title: Example Node.js Template
-  description: An example template for the scaffolder that creates a simple Node.js service
+  name: react-app-template
+  title: React App Template
+  description: Create a new React app based on a GitHub template and publish it to a new repository.
 spec:
-  owner: user:guest
-  type: service
+  owner: devopsfarm
+  type: website
 
-  # These parameters are used to generate the input form in the frontend, and are
-  # used to gather input data for the execution of the template.
   parameters:
-    - title: Fill in some steps
+    - title: General Information
       required:
         - name
-      properties:
-        name:
-          title: Name
-          type: string
-          description: Unique name of the component
-          ui:autofocus: true
-          ui:options:
-            rows: 5
-    - title: Choose a location
-      required:
         - repoUrl
       properties:
-        repoUrl:
-          title: Repository Location
+        name:
+          title: Project Name
           type: string
+          description: Unique name for the React app
+          default: my-react-app
+        repoUrl:
+          title: New Repository URL
+          type: string
+          description: URL for the new GitHub repository (e.g., `https://github.com/username/my-react-app`)
           ui:field: RepoUrlPicker
           ui:options:
             allowedHosts:
               - github.com
 
-  # These steps are executed in the scaffolder backend, using data that we gathered
-  # via the parameters above.
   steps:
-    # Each step executes an action, in this case one templates files into the working directory.
-    - id: fetch-base
-      name: Fetch Base
-      action: fetch:template
+    - id: fetch-template
+      name: Fetch Template
+      action: fetch:cookiecutter
       input:
-        url: ./content
+        url: "https://github.com/devopsfarm-projects/devopsfarm.in_ui.git"
+        targetPath: .
         values:
-          name: ${{ parameters.name }}
+          project_name: ${{ parameters.name }}
 
-    # This step publishes the contents of the working directory to GitHub.
     - id: publish
-      name: Publish
+      name: Publish to GitHub
       action: publish:github
       input:
         allowedHosts: ['github.com']
-        description: This is ${{ parameters.name }}
         repoUrl: ${{ parameters.repoUrl }}
+        description: "Repository for ${{ parameters.name }}"
 
-    # The final step is to register our new component in the catalog.
     - id: register
-      name: Register
+      name: Register in Backstage
       action: catalog:register
       input:
-        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
-        catalogInfoPath: '/catalog-info.yaml'
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        catalogInfoPath: /catalog-info.yaml
 
-  # Outputs are displayed to the user after a successful execution of the template.
   output:
     links:
-      - title: Repository
-        url: ${{ steps['publish'].output.remoteUrl }}
-      - title: Open in catalog
-        icon: catalog
-        entityRef: ${{ steps['register'].output.entityRef }}
+      - url: ${{ steps.publish.output.repositoryUrl }}
+        title: Repository
+      - url: ${{ steps.register.output.catalogUrl }}
+        title: View in Backstage
+
+
+
+
+
+
+# apiVersion: scaffolder.backstage.io/v1beta3
+# kind: Template
+# metadata:
+#   name: react-app-template
+#   title: React App Template
+#   description: Create a new React app scaffolded with this template.
+# spec:
+#   owner: devopsfarm
+#   type: website
+
+#   parameters:
+#     - title: General Information
+#       required:
+#         - name
+#         - repoUrl
+#       properties:
+#         name:
+#           title: Project Name
+#           type: string
+#           description: Unique name for the React component
+#           default: my-react-app
+#         repoUrl:
+#           title: Repository Location
+#           type: string
+#           description: GitHub repository where the app will be published
+#           ui:field: RepoUrlPicker
+#           ui:options:
+#             allowedHosts:
+#               - github.com
+
+#   steps:
+#     - id: fetch-template
+#       name: Fetch Template
+#       action: fetch:cookiecutter
+#       input:
+#         url: ./content
+#         # url: https://github.com/devopsfarm-projects/devopsfarm.in_ui.git
+#         targetPath: .
+#         values:
+#          project_name: ${{ parameters.name }}
+  
+#     - id: publish
+#       name: Publish to GitHub
+#       action: publish:github
+#       input:
+#         allowedHosts: ['github.com']
+#         repoUrl: ${{ parameters.repoUrl }}
+#         description: Repository for ${{ parameters.name }}
+
+#     - id: register
+#       name: Register in Backstage
+#       action: catalog:register
+#       input:
+#         repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+#         catalogInfoPath: /catalog-info.yaml
+
+#   output:
+#     links:
+#       - url: ${{ steps.publish.output.repositoryUrl }}
+#         title: Repository
+#       - url: ${{ steps.register.output.catalogUrl }}
+#         title: View in Backstage
+

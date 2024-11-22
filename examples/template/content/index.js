@@ -1,1 +1,1 @@
-console.log('Hello from ${{ values.name }}!');
+console.log('Hello from {{ cookiecutter.project_name }}!');
