@@ -20,8 +20,9 @@ Sign in using GitHub
         backend.add(import('@backstage/plugin-auth-backend-module-github-provider'));
         ```
 
-  -  add in packages/app/src/App.tsx :- 
-
+  -  add in packages/app/src/App.tsx :-
+    
+     ```sh
         import { githubAuthApiRef } from '@backstage/core-plugin-api';
         import { SignInPage } from '@backstage/core-components';
 
@@ -38,13 +39,13 @@ Sign in using GitHub
                 apiRef: githubAuthApiRef,
                 }}
             />
-            ),
-        },
-    
+            ), },    
         });
-
+     ```
+       
   - backstage/app-config.local.yaml
         # Backstage override configuration for your local development environment
+             ```sh
             auth:
             environment: development
             providers:
@@ -56,7 +57,8 @@ Sign in using GitHub
                     signIn:
                     resolvers:
                         - resolver: usernameMatchingUserEntityName
-
+             ```
+    
             integrations:
             github:
                 - host: github.com
