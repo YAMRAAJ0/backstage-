@@ -1,0 +1,177 @@
+name: Deploy to Vercel
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build the React app
+        run: npm run build
+
+      - name: Fetch Vercel Project and Organization IDs
+        env:
+          VERCEL_API_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          PROJECT_NAME="your-project-name"
+          
+          # Fetch project details
+          RESPONSE=$(curl -s -X GET "https://api.vercel.com/v9/projects?name=$PROJECT_NAME" \
+            -H "Authorization: Bearer $VERCEL_API_TOKEN")
+      
+          # Extract Project ID
+          PROJECT_ID=$(echo "$RESPONSE" | jq -r '.projects[0].id')
+          echo "Project ID: $PROJECT_ID"
+      
+          # Extract Organization ID
+          ORG_ID=$(echo "$RESPONSE" | jq -r '.projects[0].orgId')
+          echo "Organization ID: $ORG_ID"
+      
+          # Save to GitHub environment variables
+          echo "project_id=$PROJECT_ID" >> $GITHUB_ENV
+          echo "org_id=$ORG_ID" >> $GITHUB_ENV
+      
+
+      - name: Deploy to Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          PROJECT_ID: ${{ env.project_id }}
+        run: npx vercel --prod --yes --token $VERCEL_TOKEN
+
+
+
+
+
+
+# name: Deploy to Vercel
+
+# on:
+#   push:
+#     branches:
+#       - master
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
+      
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v2
+#         with:
+#           node-version: '16'
+
+#       - name: Install dependencies
+#         run: npm install
+
+#       - name: Build the React app
+#         run: npm run build
+
+#       - name: Fetch Vercel Project ID
+#         env:
+#           VERCEL_API_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+#         run: |
+#           PROJECT_NAME="your-project-name"
+#           PROJECT_ID=$(curl -s -X GET "https://api.vercel.com/v9/projects?name=$PROJECT_NAME" \
+#             -H "Authorization: Bearer $VERCEL_API_TOKEN" \
+#             | jq -r '.projects[0].id')
+#           echo "Project ID: $PROJECT_ID"
+#           echo "project_id=$PROJECT_ID" >> $GITHUB_ENV
+
+#       - name: Deploy to Vercel
+#         env:
+#           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+#           PROJECT_ID: ${{ env.project_id }}
+#         run: npx vercel --prod --yes --token $VERCEL_TOKEN
+
+
+
+
+# name: Deploy to Vercel
+
+# on:
+#   push:
+#     branches:
+#       - master  # Trigger deployment on the 'master' branch
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
+      
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v2
+#         with:
+#           node-version: '16'
+
+#       - name: Install dependencies
+#         run: npm install
+
+#       - name: Build the React app
+#         run: npm run build
+
+#       - name: Deploy to Vercel
+#         env:
+#           vercel-token: ${{ secrets.VERCEL_TOKEN }}
+#         run: |
+#           npx vercel --prod --token $VERCEL_TOKEN \
+#             --name my-react \
+#             --scope "yamraaj's projects" \
+#             --confirm
+
+
+
+# name: Deploy to Vercel
+
+# on:
+#   push:
+#     branches:
+#       - master 
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
+      
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v2
+#         with:
+#           node-version: '16'
+
+#       - name: Install dependencies
+#         run: npm install
+
+#       - name: Build the React app
+#         run: npm run build
+
+#       - name: Deploy to Vercel
+#         uses: amondnet/vercel-action@v20
+#         with:
+#           vercel-token: ${{ secrets.VERCEL_TOKEN }}
+#           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+#           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+
+#           # vercel-token: aOQRqtrVFe8QXqfMVmKNkCeT
+#           # vercel-org-id: team_yLjTtM02AiMPlGuWukgyQy59
+#           # vercel-project-id: prj_m08WQMKKAsuRSCQTUzkoeB5dmJij
+
+#           # RXeYXhZfv2zuffeoXwDqXqY9

@@ -1,13 +1,9 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: react-app-template-1
-  title: React App Template-1
+  name: react-app-template-2
+  title: React App Template-2
   description: Create a new React app, publish it to GitHub, and deploy it to Vercel-2.
-  links:
-    - url: https://vercel.com/dashboard
-      title: My Dashboard
-      icon: dashboard
 spec:
   owner: devopsfarm
   type: website
@@ -65,6 +61,16 @@ spec:
               VERCEL_PROJECT_ID: "${{ parameters.vercel_project_id }}"
             }
 
+    - id: deploy-to-vercel
+      name: Deploy to Vercel
+      action: github:actions:dispatch
+      inputs:
+        workflowId: deploy.yml # The name of the workflow file
+        branchOrTagName: master # The branch to trigger the workflow on
+        inputs:
+          repoUrl: ${{ parameters.repoUrl }} # Custom input passed to the triggered workflow
+
+
     - id: register
       name: Register in Backstage
       action: catalog:register
@@ -74,7 +80,8 @@ spec:
 
   output:
     links:
-      - repoUrl: ${{ parameters.repoUrl }}
+      - url: ${{ steps.publish.output.repositoryUrl }}
         title: Repository
-      - repoUrl: ${{ parameters.repoUrl }}
+      - url: ${{ steps.register.output.catalogUrl }}
         title: View in Backstage
+      - url: 'https://vercel.com/dashboard'  # Link to Vercel Dashboard

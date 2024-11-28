@@ -23,12 +23,12 @@ backend:
       - host: github.com
       - host: raw.githubusercontent.com
 
-integrations:
-  github:
-    - host: github.com
-      apiBaseUrl: https://api.github.com
-      rawBaseUrl: https://raw.githubusercontent.com
-      token: "${GITHUB_TOKEN}"  # Reference the environment variable
+# integrations:
+#   github:
+#     - host: github.com
+#       apiBaseUrl: https://api.github.com
+#       rawBaseUrl: https://raw.githubusercontent.com
+#       token: token  
 
 scaffolder:
   # see https://backstage.io/docs/features/software-templates/configuration for software template options
@@ -40,16 +40,16 @@ techdocs:
   publisher:
     type: 'local'
 
-auth:
-  providers:
-    guest: {}
-    github:
-      development:
-        clientId: "${GITHUB_CLIENT_ID}"  # Reference the environment variable
-        clientSecret: "${GITHUB_CLIENT_SECRET}"  # Reference the environment variable
-        signIn:
-          resolvers:
-            - resolver: usernameMatchingUserEntityName
+# auth:
+#   providers:
+#     guest: {}
+#     github:
+#       development:
+#         clientId: clientId
+#         clientSecret: clientSecret
+#         signIn:
+#           resolvers:
+#             - resolver: usernameMatchingUserEntityName
 
 catalog:
   locations:
@@ -57,14 +57,26 @@ catalog:
       target: ../../examples/template/template.yaml
       rules:
         - allow: [Template]
+
+    - type: file
+      target: ../../examples/template2/template.yaml
+      rules:
+        - allow: [Template]
+
+    - type: file
+      target: ../../examples/template3/template.yaml
+      rules:
+        - allow: [Template]
+
     - type: file
       target: ../../examples/org.yaml
       rules:
         - allow: [User, Group]
+
+
 
 kubernetes:
   # see https://backstage.io/docs/features/kubernetes/configuration for kubernetes configuration options
 
 permission:
   enabled: true
-
