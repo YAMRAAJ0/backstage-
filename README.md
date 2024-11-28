@@ -16,7 +16,9 @@ Sign in using GitHub
 
   -  import in packages/backend/src/index.ts :-
 
+        ```sh
         backend.add(import('@backstage/plugin-auth-backend-module-github-provider'));
+        ```
 
   -  add in packages/app/src/App.tsx :- 
 
