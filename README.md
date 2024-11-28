@@ -45,7 +45,8 @@ Sign in using GitHub
        
   - backstage/app-config.local.yaml
         # Backstage override configuration for your local development environment
-             ```sh
+
+     ```sh
             auth:
             environment: development
             providers:
@@ -57,7 +58,7 @@ Sign in using GitHub
                     signIn:
                     resolvers:
                         - resolver: usernameMatchingUserEntityName
-             ```
+     ```
     
             integrations:
             github:
