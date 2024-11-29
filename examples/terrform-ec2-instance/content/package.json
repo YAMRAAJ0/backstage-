@@ -1,0 +1,6 @@
+
+{
+    "name": "${{ values.name }}",
+    "private": true,
+    "dependencies": {}
+}

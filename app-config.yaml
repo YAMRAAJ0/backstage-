@@ -28,7 +28,7 @@ backend:
 #     - host: github.com
 #       apiBaseUrl: https://api.github.com
 #       rawBaseUrl: https://raw.githubusercontent.com
-#       token: token  
+#       token: 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  
 
 scaffolder:
   # see https://backstage.io/docs/features/software-templates/configuration for software template options
@@ -45,14 +45,19 @@ techdocs:
 #     guest: {}
 #     github:
 #       development:
-#         clientId: clientId
-#         clientSecret: clientSecret
+#         clientId: Ov23liWggwYgluQXluaz
+#         clientSecret: 9494c78ebc255d5a5213b54df5d9fbb7d882269d
 #         signIn:
 #           resolvers:
 #             - resolver: usernameMatchingUserEntityName
 
 catalog:
   locations:
+    - type: file
+      target: ../../examples/terrform-ec2-instance/template.yaml
+      rules:
+        - allow: [Template]
+
     - type: file
       target: ../../examples/template/template.yaml
       rules:
