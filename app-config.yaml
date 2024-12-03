@@ -23,7 +23,12 @@ backend:
       - host: github.com
       - host: raw.githubusercontent.com
 
-
+# integrations:
+#   github:
+#     - host: github.com
+#       apiBaseUrl: https://api.github.com
+#       rawBaseUrl: https://raw.githubusercontent.com
+#       token: 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  
 
 scaffolder:
   # see https://backstage.io/docs/features/software-templates/configuration for software template options
@@ -35,6 +40,16 @@ techdocs:
   publisher:
     type: 'local'
 
+# auth:
+#   providers:
+#     guest: {}
+#     github:
+#       development:
+#         clientId: Ov23liWggwYgluQXluaz
+#         clientSecret: 9494c78ebc255d5a5213b54df5d9fbb7d882269d
+#         signIn:
+#           resolvers:
+#             - resolver: usernameMatchingUserEntityName
 
 catalog:
   locations:
