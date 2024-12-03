@@ -67,3 +67,4 @@ Sign in using GitHub
                 rawBaseUrl: https://raw.githubusercontent.com
                 token: token
 
+# Backstage-templates
