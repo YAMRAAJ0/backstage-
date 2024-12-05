@@ -1,5 +1,3 @@
-#template.yaml
-
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
@@ -29,27 +27,36 @@ spec:
           description: AWS_SECRET_ACCESS_KEY
 
         InstanceName:
-          title: Instance Name.
+          title: Instance Name
           type: string
-          description: Name of the Instnace to be created.
+          description: Name of the Instance to be created
           ui:autofocus: true
           ui:options:
             rows: 5
 
         Region:
-          title:  AWS Region
+          title: AWS Region
           type: string
-          description: Name of the region where you want to create your create-ec2-instance eg:- us-east-1, ap-south-1 etc.
-
+          description: Name of the region where you want to create the EC2 instance (e.g., us-east-1, ap-south-1)
+        
         InstanceType:
-          title: Type of Instance.
+          title: Type of Instance
           type: string
-          description: Type of the instance that you want to deploy, for eg:- t2.medium, t3.medium etc.
+          description: Type of the instance (e.g., t2.medium, t3.micro)
           enum:
             - t2.medium
             - t2.small
             - t2.micro
             - t3.medium
+
+        Action:
+          title: Action to Perform
+          type: string
+          description: Action to perform on the EC2 instance (either 'apply' to create or 'destroy' to terminate)
+          enum:
+            - apply
+            - destroy
+          default: apply
 
     - title: Choose a Repository Location
       required:
@@ -64,48 +71,40 @@ spec:
               - github.com
 
   steps:
-# Getting the all the files/details from the template
     - id: fetch-base
       name: Fetching Details from content folder
       action: fetch:template
       input:
-        url: ./content  # Location of the content directory where catlog-info.yaml file is present for the template
+        url: ./content
         values:
-          instanceName: ${{ parameters.InstanceName}}
+          instanceName: ${{ parameters.InstanceName }}
           awsRegion: "${{ parameters.Region }}"
-          instanceType: ${{ parameters.InstanceType}}
+          instanceType: ${{ parameters.InstanceType }}
+          action: ${{ parameters.Action }}
         copyWithoutTemplating:
           - .github/**/*
 
-
-# Publish the content of the current working directory to our github directory
     - id: publish
       name: Publishing Details
       action: publish:github
       input:
         allowedHosts: ['github.com']
-        description: This repo is to create an ec2 instance ${{ parameters.InstanceName }} using backstage.
+        description: This repo is to create an EC2 instance ${{ parameters.InstanceName }} using Backstage
         repoUrl: ${{ parameters.repoUrl }}
-        repoVisibility: public # or 'internal' or 'private'
-        # defaultBranch: master
-        secrets: {
-              AWS_ACCESS_KEY_ID: "${{ parameters.AWS_ACCESS_KEY_ID }}",
-              AWS_SECRET_ACCESS_KEY: "${{ parameters.AWS_SECRET_ACCESS_KEY }}",
-              AWS_REGION: "${{ parameters.Region }}",
-            }
+        repoVisibility: public
+        secrets:
+          AWS_ACCESS_KEY_ID: "${{ parameters.AWS_ACCESS_KEY_ID }}"
+          AWS_SECRET_ACCESS_KEY: "${{ parameters.AWS_SECRET_ACCESS_KEY }}"
+          AWS_REGION: "${{ parameters.Region }}"
+          ACTION: "${{ parameters.Action }}"
 
-
-
-        
-# Registering new component in the catalog of backstage.
     - id: register
-      name: Registering the new Component 
+      name: Registering the new Component
       action: catalog:register
       input:
-        repoContentsUrl: ${{steps['publish'].output.repoContentsUrl }}
-        catalogInfoPath: '/component-info.yaml' # where the info of the catalog is stored.
+        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
+        catalogInfoPath: '/component-info.yaml'
 
-# Output links  are displayed to the user after the template execution.
   output:
     links:
       - title: Repository
@@ -113,6 +112,125 @@ spec:
       - title: Open in catalog
         icon: catalog
         entityRef: ${{ steps['register'].output.entityRef }}
+
+
+
+
+# #template.yaml
+
+# apiVersion: scaffolder.backstage.io/v1beta3
+# kind: Template
+# metadata:
+#   name: create-ec2-instance
+#   title: Create an EC2 Instance
+#   description: Create an Instance to deploy your application
+#   tags: ['recommended']
+# spec:
+#   owner: guests
+#   type: service
+#   parameters:
+#     - title: EC2 Instance Creation
+#       required:
+#          - InstanceName
+#          - Region
+#          - InstanceType    
+#          - AWS_ACCESS_KEY_ID
+#          - AWS_SECRET_ACCESS_KEY
+#       properties:
+#         AWS_ACCESS_KEY_ID:
+#           title: AWS_ACCESS_KEY_ID
+#           type: string
+#           description: AWS_ACCESS_KEY_ID
+#         AWS_SECRET_ACCESS_KEY:
+#           title: AWS_SECRET_ACCESS_KEY
+#           type: string
+#           description: AWS_SECRET_ACCESS_KEY
+
+#         InstanceName:
+#           title: Instance Name.
+#           type: string
+#           description: Name of the Instnace to be created.
+#           ui:autofocus: true
+#           ui:options:
+#             rows: 5
+
+#         Region:
+#           title:  AWS Region
+#           type: string
+#           description: Name of the region where you want to create your create-ec2-instance eg:- us-east-1, ap-south-1 etc.
+
+#         InstanceType:
+#           title: Type of Instance.
+#           type: string
+#           description: Type of the instance that you want to deploy, for eg:- t2.medium, t3.medium etc.
+#           enum:
+#             - t2.medium
+#             - t2.small
+#             - t2.micro
+#             - t3.medium
+
+#     - title: Choose a Repository Location
+#       required:
+#         - repoUrl
+#       properties:
+#         repoUrl:
+#           title: Location of the repository
+#           type: string
+#           ui:field: RepoUrlPicker
+#           ui:options:
+#             allowedHosts:
+#               - github.com
+
+#   steps:
+# # Getting the all the files/details from the template
+#     - id: fetch-base
+#       name: Fetching Details from content folder
+#       action: fetch:template
+#       input:
+#         url: ./content  # Location of the content directory where catlog-info.yaml file is present for the template
+#         values:
+#           instanceName: ${{ parameters.InstanceName}}
+#           awsRegion: "${{ parameters.Region }}"
+#           instanceType: ${{ parameters.InstanceType}}
+#         copyWithoutTemplating:
+#           - .github/**/*
+
+
+# # Publish the content of the current working directory to our github directory
+#     - id: publish
+#       name: Publishing Details
+#       action: publish:github
+#       input:
+#         allowedHosts: ['github.com']
+#         description: This repo is to create an ec2 instance ${{ parameters.InstanceName }} using backstage.
+#         repoUrl: ${{ parameters.repoUrl }}
+#         repoVisibility: public # or 'internal' or 'private'
+#         # defaultBranch: master
+#         secrets: {
+#               AWS_ACCESS_KEY_ID: "${{ parameters.AWS_ACCESS_KEY_ID }}",
+#               AWS_SECRET_ACCESS_KEY: "${{ parameters.AWS_SECRET_ACCESS_KEY }}",
+#               AWS_REGION: "${{ parameters.Region }}",
+#             }
+
+
+
+        
+# # Registering new component in the catalog of backstage.
+#     - id: register
+#       name: Registering the new Component 
+#       action: catalog:register
+#       input:
+#         repoContentsUrl: ${{steps['publish'].output.repoContentsUrl }}
+#         catalogInfoPath: '/component-info.yaml' # where the info of the catalog is stored.
+
+# # Output links  are displayed to the user after the template execution.
+#   output:
+#     links:
+#       - title: Repository
+#         url: ${{ steps['publish'].output.remoteUrl }}
+#       - title: Open in catalog
+#         icon: catalog
+#         entityRef: ${{ steps['register'].output.entityRef }}
 
 
 

@@ -1,0 +1,114 @@
+[33mcommit 98186a9d9ebd9c8c9faef297b320a6ae96ee93c5[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m
+Author: Trilok <tiosuthar@gmail.com>
+Date:   Tue Dec 3 13:08:29 2024 +0530
+
+    terraform template add
+
+[33mcommit ee68faa4354c51bd795b2f87a948f30501f2b2d1[m
+Author: Trilok <tiosuthar@gmail.com>
+Date:   Fri Nov 29 23:27:06 2024 +0530
+
+    Remove secret from app-config.yaml
+
+[33mcommit 3b77ec0ef1f35bb05d0a676b27d8e7489715b869[m
+Author: Trilok <tiosuthar@gmail.com>
+Date:   Fri Nov 29 23:11:27 2024 +0530
+
+    terraform template
+
+[33mcommit d5150a80d80726bd12408a6ba1eb9039b0b5ab54[m
+Author: Trilok <tiosuthar@gmail.com>
+Date:   Fri Nov 29 23:03:34 2024 +0530
+
+    terraform template
+
+[33mcommit 237b1d8294d6e13123d33625d75c906a5b6a665c[m
+Merge: 9a382f0 2bf0697
+Author: Trilok <tiosuthar@gmail.com>
+Date:   Fri Nov 29 22:42:47 2024 +0530
+
+    terraform template
+
+[33mcommit 9a382f03c104c2cb777a3dd04205c959ad120c1e[m
+Author: Trilok <tiosuthar@gmail.com>
+Date:   Fri Nov 29 22:37:10 2024 +0530
+
+    terraform template
+
+[33mcommit 2bf0697f0a7bc8259350f3deeb04a0d8730dcf87[m[33m ([m[1;31morigin/main[m[33m)[m
+Author: Trilok <110720266+YAMRAAJ0@users.noreply.github.com>
+Date:   Thu Nov 28 11:39:07 2024 +0530
+
+    Update README.md
+
+[33mcommit 4efd5af1a2ac5dae8ec6f1fae03ffe65d002c10e[m
+Author: Trilok <110720266+YAMRAAJ0@users.noreply.github.com>
+Date:   Thu Nov 28 11:37:21 2024 +0530
+
+    Update README.md
+
+[33mcommit e272aa552c616bede92518a26626012e249e5f91[m
+Author: Trilok <110720266+YAMRAAJ0@users.noreply.github.com>
+Date:   Thu Nov 28 11:36:35 2024 +0530
+
+    Update README.md
+
+[33mcommit a4e4b852a58489645235f7547edf0688d76ac20e[m
+Author: Trilok <110720266+YAMRAAJ0@users.noreply.github.com>
+Date:   Thu Nov 28 11:33:12 2024 +0530
+
+    Update README.md
+
+[33mcommit 8e7bb17408f32f6fab3339d8b0a11ad865933cd9[m
+Author: Trilok <110720266+YAMRAAJ0@users.noreply.github.com>
+Date:   Thu Nov 28 11:30:50 2024 +0530
+
+    Update README.md
+
+[33mcommit d2754a333bb5ddcd5fbaf7cb9a32526da7e6b112[m
+Author: Trilok <tiosuthar@gmail.com>
+Date:   Thu Nov 28 11:26:11 2024 +0530
+
+    update template & add vercel-deployment
+
+[33mcommit 07501ff801e885eba1a2df4cb1af638830982689[m
+Author: Trilok <tiosuthar@gmail.com>
+Date:   Fri Nov 22 12:56:52 2024 +0530
+
+    fix
+
+[33mcommit 8ec62da2b9ff881ff28479b1f9d3360566b71fc4[m[33m ([m[1;32mnew-backstage-branch[m[33m)[m
+Author: Trilok <tiosuthar@gmail.com>
+Date:   Fri Nov 22 11:15:13 2024 +0530
+
+    code update
+
+[33mcommit 666792fbf7aea81acc0641764bf1039c4294b39f[m
+Author: Trilok <tiosuthar@gmail.com>
+Date:   Fri Nov 22 11:01:50 2024 +0530
+
+    1st commit
+
+[33mcommit 0466b47a0b23bc892114a579a3e748dcd3b008a5[m
+Author: Trilok <tiosuthar@gmail.com>
+Date:   Fri Nov 22 10:56:47 2024 +0530
+
+    1st commit
+
+[33mcommit 33aff426d4aaa4b899f5d4c05a27d4672d1c3289[m
+Author: Trilok <tiosuthar@gmail.com>
+Date:   Fri Nov 22 10:49:25 2024 +0530
+
+    1st commit
+
+[33mcommit 89044b3546333d27249aa705de5f97543495841d[m
+Author: Trilok <tiosuthar@gmail.com>
+Date:   Fri Nov 22 10:39:46 2024 +0530
+
+    first commit
+
+[33mcommit 7f0bad2f98ed0a23028d6567a7486ee639780470[m
+Author: Trilok <tiosuthar@gmail.com>
+Date:   Fri Nov 15 13:31:21 2024 +0530
+
+    Initial commit

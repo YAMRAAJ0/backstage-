@@ -25,12 +25,19 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-      
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: 1.0.0
+          terraform_version: 1.5.0
+
+      - name: Cache Terraform providers
+        uses: actions/cache@v2
+        with:
+          path: ~/.terraform.d/plugin-cache
+          key: ${{ runner.os }}-terraform-${{ hashFiles('**/*.tf') }}
+          restore-keys: |
+            ${{ runner.os }}-terraform-
 
       - name: Terraform Init
         run: terraform init
@@ -45,136 +52,11 @@ jobs:
         run: terraform plan -out=tfplan
 
       - name: Terraform Apply
-        if: ${{ github.event.inputs.action == 'apply' }}
-        run: terraform apply -input=false tfplan
+        # if: ${{ github.event.inputs.action == 'apply' }}
+        run: terraform apply -input=false -auto-approve tfplan
 
       - name: Terraform Destroy
         if: ${{ github.event.inputs.action == 'destroy' }}
         run: terraform destroy -auto-approve
-
-
-
-# #workflows.yml
-
-
-# name: EC2 Instance Management
-
-# on:
-#   push:
-#     branches:
-#       - master
-#   workflow_dispatch:
-#     inputs:
-#       action:
-#         description: 'Action to Perform (apply/destroy)'
-#         default: apply
-#         type: string
-
-# jobs:
-#   manage-ec2:
-#     runs-on: ubuntu-latest
-
-#     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v2
-
-#       - name: Configure AWS credentials
-#         uses: aws-actions/configure-aws-credentials@v1
-#         with:
-#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#           aws-region: ${{ secrets.AWS_REGION }}
-      
-
-#       - name: Setup Terraform
-#         uses: hashicorp/setup-terraform@v1
-#         with:
-#           terraform_version: 1.0.0
-
-#       - name: Terraform Init
-#         run: terraform init
-
-#       - name: Terraform Format
-#         run: terraform fmt -check
-
-#       - name: Terraform Validate
-#         run: terraform validate
-
-#       - name: Terraform Plan
-#         run: terraform plan -out=tfplan
-
-#       - name: Terraform Apply
-#         if: ${{ github.event.inputs.action == 'apply' }}
-#         run: terraform apply -input=false tfplan
-
-#       - name: Terraform Destroy
-#         if: ${{ github.event.inputs.action == 'destroy' }}
-#         run: terraform destroy -auto-approve
-
-
-
-
-
-# name: EC2 Instance Management
-
-# on:
-#   push:
-#     branches:
-#       - master
-#   workflow_dispatch:
-#     inputs:
-#       instanceName:
-#         description: 'Instance Name'
-#         required: true
-#         type: string
-#       awsRegion:
-#         description: 'AWS Region'
-#         required: true
-#         type: string
-#       instanceType:
-#         description: 'Instance Type'
-#         required: true
-#         type: string
-#       action:
-#         description: 'Action to Perform (apply/destroy)'
-#         required: true
-#         type: string
-
-# jobs:
-#   manage-ec2:
-#     runs-on: ubuntu-latest
-
-#     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v2
-
-#       - name: Setup Terraform
-#         uses: hashicorp/setup-terraform@v1
-#         with:
-#           terraform_version: 1.0.0
-
-#       - name: Terraform Init
-#         run: terraform init
-
-#       - name: Terraform Format
-#         run: terraform fmt -check
-
-#       - name: Terraform Validate
-#         run: terraform validate
-
-#       - name: Terraform Plan
-#         run: terraform plan -var "instance_name=${{ github.event.inputs.instanceName }}" -var "aws_region=${{ github.event.inputs.awsRegion }}" -var "instance_type=${{ github.event.inputs.instanceType }}" -out=tfplan
-
-#       - name: Terraform Apply
-#         if: ${{ github.event.inputs.action == 'apply' }}
-#         run: terraform apply -input=false tfplan
-
-#       - name: Terraform Destroy
-#         if: ${{ github.event.inputs.action == 'destroy' }}
-#         run: terraform destroy -auto-approve -var "instance_name=${{ github.event.inputs.instanceName }}" -var "aws_region=${{ github.event.inputs.awsRegion }}" -var "instance_type=${{ github.event.inputs.instanceType }}"
-
-
-
-
 
 
