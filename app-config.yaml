@@ -28,7 +28,7 @@ integrations:
     - host: github.com
       apiBaseUrl: https://api.github.com
       rawBaseUrl: https://raw.githubusercontent.com
-      token: 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  
+      # token: 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  
 
 scaffolder:
   # see https://backstage.io/docs/features/software-templates/configuration for software template options
@@ -45,8 +45,8 @@ auth:
     guest: {}
     github:
       development:
-        clientId: Ov23liWggwYgluQXluaz
-        clientSecret: 9494c78ebc255d5a5213b54df5d9fbb7d882269d
+        # clientId: Ov23liWggwYgluQXluaz
+        # clientSecret: 9494c78ebc255d5a5213b54df5d9fbb7d882269d
         signIn:
           resolvers:
             - resolver: usernameMatchingUserEntityName
