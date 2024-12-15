@@ -1,0 +1,11 @@
+{
+    "name": "{{cookiecutter.name}}",
+    "private": true,
+    "dependencies": {}
+  }
+
+// {
+//     "name": "${{ values.name }}",
+//     "private": true,
+//     "dependencies": {}
+// }

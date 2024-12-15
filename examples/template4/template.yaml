@@ -1,0 +1,66 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: add-file-to-repo
+  title: Add File to GitHub Repository
+  description: Adds a file to an existing repository and creates a pull request.
+spec:
+  owner: your-team
+  type: service
+  parameters:
+    - title: Repository Information
+      required:
+        - owner
+        - repo
+        - branch
+        - filePath
+        - content
+        - prTitle
+        - prDescription
+      properties:
+        owner:
+          type: string
+          title: GitHub Owner
+        repo:
+          type: string
+          title: Repository Name
+        branch:
+          type: string
+          title: Target Branch
+        filePath:
+          type: string
+          title: Path for New File
+        content:
+          type: string
+          title: File Content
+        prTitle:
+          type: string
+          title: Pull Request Title
+        prDescription:
+          type: string
+          title: Pull Request Description
+  steps:
+    - id: clone
+      name: Clone Repository
+      action: actions/github:clone-repo
+      input:
+        owner: ${{ parameters.owner }}
+        repo: ${{ parameters.repo }}
+        branch: ${{ parameters.branch }}
+    - id: add-file
+      name: Add File
+      action: actions:create-file
+      input:
+        path: ${{ parameters.filePath }}
+        content: ${{ parameters.content }}
+        commitMessage: "Adding file ${{ parameters.filePath }}"
+    - id: create-pr
+      name: Create Pull Request
+      action: actions/github:create-pull-request
+      input:
+        owner: ${{ parameters.owner }}
+        repo: ${{ parameters.repo }}
+        title: ${{ parameters.prTitle }}
+        body: ${{ parameters.prDescription }}
+        headBranch: ${{ steps.clone.output.branch }}
+        baseBranch: ${{ parameters.branch }}

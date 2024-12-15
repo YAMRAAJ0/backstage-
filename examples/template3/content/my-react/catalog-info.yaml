@@ -2,9 +2,19 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: "{{cookiecutter.project_name}}"
+  tags: - edit 
+        - add
   annotations:
     github.com/project-slig: {{ cookiecutter.destination.owner + '/' + cookiecutter.destination.repo }}
 spec:
   type: service
   owner: user:guest
   lifecycle: experimental
+  steps: 
+    - id: fetch-repo
+      name: Fetch Repository
+      action: fetch:plain
+      input:
+        url: ${{ parameters.repoUrl }} 
+        targetPath: /repo 
+        branch: ${{ parameters.branch }}

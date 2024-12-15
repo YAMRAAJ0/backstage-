@@ -1,0 +1,128 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: Create new `main.tf` file with a new name and upload it to a repository
+  title: Upload File
+  description: Create new `main.tf` file with a new name and upload it to a repository
+  tags: ['recommended']
+spec:
+  owner: guests
+  type: service
+  parameters:
+    - title: EC2 Instance Creation
+      required:
+        - InstanceName
+        - Region
+        - InstanceType
+        - AWS_ACCESS_KEY_ID
+        - AWS_SECRET_ACCESS_KEY
+        - fileName
+        - owner
+        - repo
+      properties:
+        AWS_ACCESS_KEY_ID:
+          title: AWS Access Key ID
+          type: string
+        AWS_SECRET_ACCESS_KEY:
+          title: AWS Secret Access Key
+          type: string
+        InstanceName:
+          title: Instance Name
+          type: string
+        Region:
+          title: AWS Region
+          type: string
+        InstanceType:
+          title: Instance Type
+          type: string
+          enum:
+            - t2.medium
+            - t2.small
+            - t2.micro
+            - t3.medium
+        fileName:
+          title: File Name
+          type: string
+        Action:
+          title: Action to Perform
+          type: string
+          enum:
+            - apply
+            - destroy
+          default: apply
+        prTitle:
+          title: Pull Request Title
+          type: string
+          default: "Automated EC2 Instance Update"
+        prDescription:
+          title: Pull Request Description
+          type: string
+          default: "This PR includes changes for EC2 instance updates."
+        owner:
+          title: GitHub Owner
+          type: string
+        repo:
+          title: Repository Name
+          type: string
+        branch:
+          title: Branch Name
+          type: string
+          default: main
+
+  steps:
+    - id: render-files
+      if: '{{ parameters.name == true }}'
+      name: Rendering Files Locally
+      action: fetch:template
+      input:
+        url: ./content
+        values:
+          instanceName: ${{ parameters.InstanceName }}
+          awsRegion: "${{ parameters.Region }}"
+          instanceType: ${{ parameters.InstanceType }}
+          action: ${{ parameters.Action }}
+        copyWithoutTemplating:
+          - content/terraform.tfvars
+          - content/variable.tf
+          - content/terraform.tfstate.backup
+          - content/terraform.tfstate
+          - content/README.md
+          - content/package.json
+          - content/component-info.yaml
+          - content/catalog-info.yaml
+          - content/.terraform.lock.hcl
+
+    - id: rename-files
+      if: '{{ parameters.name == true }}'
+      name: Rename Files
+      action: fs:rename
+      input:
+        files:
+          - from: main.tf
+            to: ${{ parameters.fileName }}
+            overwrite: true
+
+    - id: create-pr
+      if: '{{ parameters.name == true }}'
+      name: Create Pull Request
+      action: publish:github:pull-request
+      input:
+        repoUrl: github.com?repo=${{ parameters.repo }}&owner=${{ parameters.owner }}    
+        title: ${{ parameters.prTitle }}
+        description: ${{ parameters.prDescription }}
+        branchName: ${{ parameters.branch }}
+
+    - id: register
+      name: Registering the New Component
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
+        catalogInfoPath: '/component-info.yaml'
+
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps['publish'].output.remoteUrl }}
+      - title: Open in Catalog
+        icon: catalog
+        entityRef: ${{ steps['register'].output.entityRef }}

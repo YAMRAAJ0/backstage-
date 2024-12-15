@@ -1,0 +1,159 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: upload-file-2
+  title: Upload File-2
+  description: Create new main.tf file with new name and upload it to a repository
+  tags: ['recommended']
+spec:
+  owner: guests
+  type: service
+  parameters:
+    - title: EC2 Instance Creation
+      required:
+        - InstanceName
+        - Region
+        - InstanceType
+        - AWS_ACCESS_KEY_ID
+        - AWS_SECRET_ACCESS_KEY
+        - fileName
+      properties:
+        AWS_ACCESS_KEY_ID:
+          title: AWS Access Key ID
+          type: string
+          description: AWS Access Key ID
+        AWS_SECRET_ACCESS_KEY:
+          title: AWS Secret Access Key
+          type: string
+          description: AWS Secret Access Key
+        InstanceName:
+          title: Instance Name
+          type: string
+          description: Name of the EC2 instance to be created
+          ui:autofocus: true
+        Region:
+          title: AWS Region
+          type: string
+          description: AWS region where you want to create the EC2 instance (e.g., us-east-1, ap-south-1)
+        InstanceType:
+          title: Instance Type
+          type: string
+          description: Type of the EC2 instance (e.g., t2.micro, t3.medium)
+          enum:
+            - t2.medium
+            - t2.small
+            - t2.micro
+            - t3.medium
+        fileName:
+          title: File Name
+          type: string
+          description: Name of the file to upload (e.g., `custom_main.tf`)
+        Action:
+          title: Action to Perform
+          type: string
+          description: Action to perform on the EC2 instance (either 'apply' to create or 'destroy' to terminate)
+          enum:
+            - apply
+            - destroy
+          default: apply
+
+      
+      parameters:
+    - title: Pull Request Details
+      properties:
+        prTitle:
+          title: Pull Request Title
+          type: string
+          description: Title of the pull request (optional)
+        prDescription:
+          title: Pull Request Description
+          type: string
+          description: Description of the pull request (optional)
+        
+    
+    - title: Repository Details
+      required:
+        - owner
+        - repo
+      properties:
+        owner:
+          title: GitHub Owner
+          type: string
+          description: The owner of the repository (e.g., organization or username)
+        repo:
+          title: Repository Name
+          type: string
+          description: The name of the repository
+        branch:
+          title: Branch Name
+          type: string
+          description: The name of the Branch
+
+
+  steps:
+
+    - id: fetch-template
+      name: Fetch Template
+      action: fetch:cookiecutter
+      input:
+        url: ./content/my-react
+        targetPath: .
+       
+
+    - id: Render files
+      name: Fetching Details from content folder
+      action: fetch:template
+      input:
+        url: ./content
+        values:
+          instanceName: ${{ parameters.InstanceName }}
+          awsRegion: "${{ parameters.Region }}"
+          instanceType: ${{ parameters.InstanceType }}
+          action: ${{ parameters.Action }}
+        copyWithoutTemplating:
+          - content/terraform.tfvars
+          - content/variable.tf
+          - content/terraform.tfstate.backup
+          - content/terraform.tfstate
+          - content/README.md
+          - content/package.json
+          - content/component-info.yaml
+          - content/catalog-info.yaml
+          - content/.terraform.lock.hcl
+
+    - action: fs:rename
+      id: renameFiles
+      name: Rename files
+      input:
+        files:
+          - from: main.tf
+            to: ${{ parameters.fileName }}
+            overwrite: true
+            content: ${{ parameters.content }}
+            commitMessage: "Adding file ${{ parameters.fileName }}"
+
+    - id: Create PR
+      if: ${{ parameters.createRepo !== true }}
+      name: Create Pull Request
+      action: publish:github:pull-request
+      input:
+        repoUrl: github.com?repo=${{ parameters.repo }}&owner=${{ parameters.owner }}    
+        title: ${{ parameters.prTitle}}
+        description: ${{ parameters.prDescription  }}
+        branchName: ${{ parameters.branch}}
+
+
+    - id: register
+      name: Registering the New Component
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
+        catalogInfoPath: '/component-info.yaml'
+
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps['publish'].output.remoteUrl }}
+      - title: Open in Catalog
+        icon: catalog
+        entityRef: ${{ steps['register'].output.entityRef }}

@@ -60,13 +60,15 @@ const app = createApp({
     SignInPage: props => (
       <SignInPage
       {...props}
-      auto={false} // Disable automatic popup and require user click
-      provider={{
-        id: 'github',
-        title: 'GitHub',
-        message: 'Sign in using GitHub',
-        apiRef: githubAuthApiRef,
-      }}
+      providers={[
+        'guest',
+        {
+          id: 'github-auth-provider',
+          title: 'GitHub',
+          message: 'Sign in using GitHub',
+          apiRef: githubAuthApiRef,
+        },
+      ]}
     />    
     ),
   },

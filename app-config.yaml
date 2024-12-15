@@ -28,6 +28,7 @@ integrations:
     - host: github.com
       apiBaseUrl: https://api.github.com
       rawBaseUrl: https://raw.githubusercontent.com
+      token: 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 
       # token: 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  
 
 scaffolder:
@@ -45,16 +46,26 @@ auth:
     guest: {}
     github:
       development:
-        # clientId: Ov23liWggwYgluQXluaz
-        # clientSecret: 9494c78ebc255d5a5213b54df5d9fbb7d882269d
+        clientId: Ov23liWggwYgluQXluaz
+        clientSecret: 9494c78ebc255d5a5213b54df5d9fbb7d882269d
         signIn:
           resolvers:
             - resolver: usernameMatchingUserEntityName
 
 catalog:
+  import:
+    entityFilename: catalog-info.yaml
+    pullRequestBranchName: backstage-integration
+  rules:
+    - allow: [Component, System, API, Resource, Location]
   locations:
     - type: file
       target: ../../examples/terrform-ec2-instance/template.yaml
+      rules:
+        - allow: [Template]
+        
+    - type: file
+      target: ../../examples/terrform-ec2-instance2/template.yaml
       rules:
         - allow: [Template]
 
@@ -70,6 +81,16 @@ catalog:
 
     - type: file
       target: ../../examples/template3/template.yaml
+      rules:
+        - allow: [Template]
+
+    - type: file
+      target: ../../examples/template4/template.yaml
+      rules:
+        - allow: [Template]
+    
+    - type: file
+      target: ../../examples/template5/template.yaml
       rules:
         - allow: [Template]
 
